@@ -4,19 +4,19 @@ public class Producto {
 	
 	private String codigo;
 	private String nombre;
-	private double precio;
+	private BigDecimal precio;
 	private int stock;
-	private Categoria categoria; 
+	private int idCategoria; 
 	
 	public Producto() {
 	}
 
-	public Producto(String codigo, String nombre, double precio, int stock, Categoria categoria) {
+	public Producto(String codigo, String nombre, BigDecimal precio, int stock, int idCategoria) {
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
-		this.categoria = categoria;
+		this.idCategoria = idCategoria;
 	}
 
 	// Getters y Setters
@@ -36,11 +36,11 @@ public class Producto {
 		this.nombre = nombre;
 	}
 
-	public double getPrecio() {
+	public BigDecimal getPrecio() {
 		return precio;
 	}
 
-	public void setPrecio(double precio) {
+	public void setPrecio(BigDecimal precio) {
 		this.precio = precio;
 	}
 
@@ -52,12 +52,12 @@ public class Producto {
 		this.stock = stock;
 	}
 
-	public Categoria getCategoria() {
-		return categoria;
+	public int getIdCategoria() {
+		return idCategoria;
 	}
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
+	public void setIdCategoria(int idCategoria) {
+		this.idCategoria = idCategoria;
 	}
 
 	@Override
