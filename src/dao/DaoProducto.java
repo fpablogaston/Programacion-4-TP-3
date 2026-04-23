@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import entidad.Producto;
-import java.sql.Statement;
+import java.math.BigDecimal;
 
 public class DaoProducto {
 
@@ -29,9 +29,9 @@ public class DaoProducto {
 	        ps = cn.prepareStatement(query);
 	        ps.setString(1, producto.getCodigo());
 	        ps.setString(2, producto.getNombre());
-	        ps.setDouble(3, producto.getPrecio());
+	        ps.setBigDecimal(3, producto.getPrecio());
 	        ps.setInt(4, producto.getStock());
-	        ps.setInt(5, producto.getCategoria().getIdCategoria());
+	        ps.setInt(5, producto.getIdCategoria());
 	        filas = ps.executeUpdate();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -57,9 +57,9 @@ public class DaoProducto {
 	        cst = cn.prepareCall(query);
 	        cst.setString(1, producto.getCodigo());
 	        cst.setString(2, producto.getNombre());
-	        cst.setDouble(3, producto.getPrecio());
+	        cst.setBigDecimal(3, producto.getPrecio());
 	        cst.setInt(4, producto.getStock());
-	        cst.setInt(5, producto.getCategoria().getIdCategoria());
+	        cst.setInt(5, producto.getIdCategoria());
 	        cst.execute();
 	    } catch (SQLException e) {
 	        e.printStackTrace();

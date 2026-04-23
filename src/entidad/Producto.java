@@ -1,4 +1,5 @@
 package entidad;
+import java.math.BigDecimal;
 
 public class Producto {
 	
@@ -7,11 +8,12 @@ public class Producto {
 	private BigDecimal precio;
 	private int stock;
 	private int idCategoria; 
-	
-	public Producto() {
-	}
 
+	
+	public Producto() {}
+	
 	public Producto(String codigo, String nombre, BigDecimal precio, int stock, int idCategoria) {
+		super();
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.precio = precio;
