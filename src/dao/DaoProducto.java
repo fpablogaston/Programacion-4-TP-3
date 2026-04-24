@@ -4,7 +4,10 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import entidad.Producto;
 
 public class DaoProducto {
@@ -16,6 +19,43 @@ public class DaoProducto {
 	
 	public DaoProducto(){}
 
+	public ArrayList<Producto> ListarProductos() {
+		
+		ArrayList<Producto> lsProducto = new ArrayList<Producto>();
+		Connection cn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			cn = DriverManager.getConnection(host + dbName, user, pass);
+
+			String query = "SELECT Codigo, Nombre, Precio, Stock, IdCategoria FROM Productos";
+			ps = cn.prepareStatement(query);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				Producto p = new Producto();
+				p.setCodigo(rs.getString("Codigo"));
+				p.setNombre(rs.getString("Nombre"));
+				p.setPrecio(rs.getBigDecimal("Precio"));
+				p.setStock(rs.getInt("Stock"));
+				p.setIdCategoria(rs.getInt("IdCategoria"));
+				lsProducto.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (ps != null) ps.close();
+				if (cn != null) cn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return lsProducto;
+	}
 
 	public int agregarProducto(Producto producto) {
 	    String query = "INSERT INTO Productos (Codigo, Nombre, Precio, Stock, IdCategoria) VALUES (?, ?, ?, ?, ?)";
@@ -74,7 +114,6 @@ public class DaoProducto {
 			    }
 			    return filas;
 	}
-
 
 	public void ejecutarSPAgregarProducto(Producto producto) {
 	    String query = "{CALL sp_AgregarProducto(?, ?, ?, ?, ?)}";
