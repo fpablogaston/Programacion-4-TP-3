@@ -44,6 +44,36 @@ public class DaoProducto {
 	    }
 	    return filas;
 	}
+	
+	public int actualizarProducto(Producto producto) {
+		String query = "UPDATE Productos SET Nombre = ?, Precio = ?, Stock = ?, IdCategoria = ? WHERE Codigo = ?";
+		int filas = 0;
+		Connection cn = null;
+		PreparedStatement ps = null;
+
+		try {
+			cn = DriverManager.getConnection(host + dbName, user, pass);
+			ps = cn.prepareStatement(query);
+						
+			ps.setString(1, producto.getNombre());
+			ps.setBigDecimal(2, producto.getPrecio());
+			ps.setInt(3, producto.getStock());
+			ps.setInt(4, producto.getIdCategoria());
+			ps.setString(5, producto.getCodigo());
+			
+			filas = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			        try {
+			            if (ps != null) ps.close();
+			            if (cn != null) cn.close();
+			        } catch (SQLException e) {
+			            e.printStackTrace();
+			        }
+			    }
+			    return filas;
+	}
 
 
 	public void ejecutarSPAgregarProducto(Producto producto) {
