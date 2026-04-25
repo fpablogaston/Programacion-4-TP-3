@@ -19,15 +19,24 @@ public class DaoCategoria {
 	
 	public int agregarCategoria(Categoria categoria) {
 		String query = "Insert into Categorias(Nombre) values ('" + categoria.getNombre() + "')";
-		Connection cn = null; 
+		Connection cn = null;
+		Statement st = null;
 		int filas = 0;
 		
 		try {
 			cn = DriverManager.getConnection(host+dbName,user,pass);
-			Statement st = cn.createStatement();
+			st = cn.createStatement();
 			filas = st.executeUpdate(query);
 		} catch (Exception e){
 			e.printStackTrace();
+		} finally {	        
+	        try {
+	            if (st != null) st.close();
+	            if (cn != null) cn.close();
+	        } catch (Exception e2) {
+	            e2.printStackTrace();
+	        }
+		
 		}
 		return filas;
 	}
@@ -35,44 +44,66 @@ public class DaoCategoria {
 	public Categoria obtenerCategoria(int id) {
 		Categoria x = new Categoria();
 		Connection cn = null;
+		Statement st = null;
+		ResultSet rs = null;
 		
 		try {
 			cn = DriverManager.getConnection(host+dbName, user, pass);
-			Statement st = cn.createStatement();
+			st = cn.createStatement();
 			String query = "Select * from Categorias where idCategoria = "+id;
-			ResultSet rs = st.executeQuery(query);
-			rs.next();
-			x.setIdCategoria(rs.getInt("IdCategoria"));
-			x.setNombre(rs.getString("nombre"));
-		} catch(Exception e ) {
+			rs = st.executeQuery(query);
+			
+			if(rs.next()) {
+				x.setIdCategoria(rs.getInt("IdCategoria"));
+				x.setNombre(rs.getString("nombre"));
+			}
+		} catch(Exception e) {
 			e.printStackTrace();
-		}
-		return x;
+		} finally {
+	        
+			try {
+				if (rs != null) rs.close();
+				if (st != null) st.close();
+				if (cn != null) cn.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+	    }
+	    return x;
 	}
 		
 	public ArrayList<Categoria> obtenerTodasLasCategorias(){
-		
-		ArrayList<Categoria> lsCategoria = new ArrayList<Categoria>();
-		
-		Connection cn = null;
-		
-		try {
-			cn = DriverManager.getConnection(this.host + this.dbName, this.user, this.pass);
-			String query = "Select * from Categorias ";
-			Statement st = cn.createStatement();//ST ESTA PREPARADO PARA RECIBIR UNA CONSULTA
-			ResultSet rs = st.executeQuery(query);
-			
-			while(rs.next()) {
-				Categoria categoria = new Categoria();
-				categoria.setIdCategoria(rs.getInt(1));
-				categoria.setNombre(rs.getNString(2));
-				
-				lsCategoria.add(categoria);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return lsCategoria;	
+	    ArrayList<Categoria> lsCategoria = new ArrayList<Categoria>();
+	    Connection cn = null;
+	    Statement st = null;
+	    ResultSet rs = null;
+	    
+	    try {
+	        cn = DriverManager.getConnection(this.host + this.dbName, this.user, this.pass);
+	        String query = "Select * from Categorias ";
+	        st = cn.createStatement();
+	        rs = st.executeQuery(query);
+	        
+	        while(rs.next()) {
+	            Categoria categoria = new Categoria();
+	            categoria.setIdCategoria(rs.getInt(1));
+	            categoria.setNombre(rs.getNString(2));
+	            
+	            lsCategoria.add(categoria);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        
+	        try {
+	            if (rs != null) rs.close();
+	            if (st != null) st.close();
+	            if (cn != null) cn.close();
+	        } catch (Exception e2) {
+	            e2.printStackTrace();
+	        }
+	    }
+	    return lsCategoria;	
 	}
 		
 	public int borrarCategoria(int idCategoria) {
