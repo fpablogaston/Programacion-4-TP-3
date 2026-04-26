@@ -4,6 +4,6 @@
 /**
  * 
  */
-module TP3_GRUPO_9 {
-	requires java.sql;
+module Programacion4TP3 {
+    requires java.sql;
 }
