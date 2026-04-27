@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import entidad.Categoria;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DaoCategoria {
 
@@ -72,38 +73,39 @@ public class DaoCategoria {
 	    return x;
 	}
 		
-	public ArrayList<Categoria> obtenerTodasLasCategorias(){
-	    ArrayList<Categoria> lsCategoria = new ArrayList<Categoria>();
-	    Connection cn = null;
-	    Statement st = null;
-	    ResultSet rs = null;
-	    
-	    try {
-	        cn = DriverManager.getConnection(this.host + this.dbName, this.user, this.pass);
-	        String query = "Select * from Categorias ";
-	        st = cn.createStatement();
-	        rs = st.executeQuery(query);
-	        
-	        while(rs.next()) {
-	            Categoria categoria = new Categoria();
-	            categoria.setIdCategoria(rs.getInt(1));
-	            categoria.setNombre(rs.getNString(2));
-	            
-	            lsCategoria.add(categoria);
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        
-	        try {
-	            if (rs != null) rs.close();
-	            if (st != null) st.close();
-	            if (cn != null) cn.close();
-	        } catch (Exception e2) {
-	            e2.printStackTrace();
-	        }
-	    }
-	    return lsCategoria;	
+public ArrayList<Categoria> obtenerTodasLasCategorias(){
+		
+		ArrayList<Categoria> lsCategoria = new ArrayList<Categoria>();
+		String query = "SELECT * FROM Categorias";
+		Connection cn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			
+			cn = DriverManager.getConnection(host + dbName, user, pass);
+			ps = cn.prepareStatement(query);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				Categoria categoria = new Categoria();
+				categoria.setIdCategoria(rs.getInt("IdCategoria"));
+				categoria.setNombre(rs.getString("Nombre"));
+				lsCategoria.add(categoria);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) rs.close();
+				if (ps != null) ps.close();
+				if (cn != null) cn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return lsCategoria;
 	}
 		
 	public int borrarCategoria(int idCategoria) {
@@ -158,4 +160,5 @@ public class DaoCategoria {
 		
 		return filas;
 	}
+		
 }
